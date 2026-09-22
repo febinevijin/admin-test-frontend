@@ -183,7 +183,7 @@ const UserActionSettings = () => {
       // Open a new tab and pass the userId and token in the query params
       const Id = data._id; // Assuming the user ID is returned as `_id`
       const userToken = data.token; // Assuming token is returned as `token`
-      const userLoginUrl = `${process.env.REACT_APP_PUBLIC_USER_URL}/auth-login?userId=${Id}&token=${userToken}`;
+      const userLoginUrl = `https://admin-test-frontend.vercel.app/auth-login?userId=${Id}&token=${userToken}`;
 
       window.open(userLoginUrl, "_blank");
     } catch (error) {
