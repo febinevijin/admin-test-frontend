@@ -1,0 +1,193 @@
+@media (max-width:413px) {
+
+    .tableWithdraw {
+        tbody {
+            tr {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                margin-bottom: 1rem;
+
+                &:nth-last-child(1) {
+                    margin-bottom: 0;
+                }
+
+                th {
+                    &:nth-child(1) {
+                        border-top: 1px solid #dbdfea;
+                    }
+                }
+
+            }
+        }
+    }
+
+    .withdrawEdit {
+        width: 100%;
+    }
+
+    .payoutDetails {
+
+        td {
+            font-size: 14px !important;
+            padding-bottom: .5rem !important;
+        }
+    }
+
+    .nk-block-between {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.withdrawEdit {
+    // width: 400px;
+
+    .preview-title {
+        font-size: 16px;
+    }
+
+    ul {
+        li {
+            .custom-control-label {
+                padding: 1rem 1.125rem 1rem 3rem !important;
+
+                .day-card {
+                    .day-name {
+                        font-size: 12px;
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+.payoutDetails {
+
+    .charge {
+        color: #e85347;
+    }
+
+    .alert {
+        padding: 1px 7px;
+        width: fit-content;
+    }
+
+    td {
+        font-size: 16px;
+        padding-bottom: 1rem;
+        vertical-align: top;
+        font-weight: 500;
+
+        b {
+            white-space: nowrap;
+        }
+    }
+
+    .walletAdress {
+        word-break: break-all;
+    }
+}
+
+.mainCard {
+    border-radius: 10px;
+
+    .card-inner {
+        display: flex;
+        align-items: center;
+
+        .icon {
+            font-size: 20px;
+            margin-right: .5rem;
+            background-color: $accent-color;
+            color: $white;
+            padding: 0.75rem;
+            border-radius: 50%;
+        }
+
+        .details {
+            h5 {
+                margin-bottom: 0;
+            }
+
+            p {
+                font-weight: 500;
+            }
+        }
+    }
+}
+
+.listTable {
+    overflow-x: scroll;
+
+    @include media-breakpoint-up(lg) {
+        overflow-x: hidden;
+    }
+}
+
+.card-title-group{
+.card-title{
+    p{
+        margin-bottom: 0;
+    }
+}
+}
+
+.nk-tb-tnx {
+    p {
+        text-align: center;
+        padding: .5rem;
+    }
+}
+
+.nk-block-title{
+    word-spacing: 5px;
+}
+
+.card-title{
+    .title{
+        word-spacing: 5px;
+    }
+}
+
+@include media-breakpoint-down(md){
+    .flexStyle{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.kycBtn{
+    display: flex;
+    align-items: center;
+.btn{
+    padding: 2px 3px;
+    margin-right: .5rem;
+}
+}
+
+.uploadedImg{
+    img{
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+    }
+}
+
+.flexCrad1 {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.flexCrad1 table {
+    width: 49%;
+}
+
+@include media-breakpoint-down(md) {
+    .flexCrad1 table {
+        width: 100%;
+    }
+}

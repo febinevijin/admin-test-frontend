@@ -1,0 +1,113 @@
+// pricing tables
+.pricing {
+    position: relative;
+    height: 100%;
+    border-radius: 20px;
+
+    .dropdown {
+        justify-content: flex-end;
+        margin: 1.75rem 1rem 0 0;
+        position: absolute;
+        right: 0;
+    }
+
+    &-badge {
+        position: absolute;
+        right: .5rem;
+        top: .5rem;
+    }
+
+    &-head {
+        text-align: left;
+        padding: 1.75rem 1.5rem;
+    }
+
+    &-title {
+        .title {
+            margin-bottom: 0.25rem;
+            font-size: 26px;
+            color: $accent-color;
+        }
+
+        &:not(:last-child) {
+            padding-bottom: 1.25rem;
+        }
+
+        .sub-text {
+            font-size: 16px;
+            font-weight: 400;
+        }
+    }
+
+    &-body {
+        padding: 1.75rem 1.75rem 2rem;
+    }
+
+    &-features {
+        li {
+            display: flex;
+            padding: .25rem 0;
+        }
+    }
+
+    &-action {
+        margin-top: 1.5rem;
+        text-align: center;
+    }
+
+    &-media {
+        padding: 0.25rem 0;
+        margin-bottom: 1.5rem;
+
+        img {
+            max-width: 90px;
+        }
+    }
+
+    &-amount {
+        font-size: 0.875rem;
+        color: $base-light;
+
+        .amount {
+            font-size: 1.5rem;
+            font-weight: $fw-bold;
+            color: $body-color;
+        }
+    }
+
+    .titlePayment {
+        font-size: 20px;
+        margin-bottom: 0.25rem;
+        color: $accent-color;
+    }
+
+    .card-text {
+
+        .list {
+            font-size: 14px;
+            padding: 0.5rem 0;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            border-bottom: 1px solid $border-light;
+
+            &:nth-last-child(1) {
+                border-bottom: unset;
+            }
+
+            .icon {
+                margin-right: .5rem;
+                font-size: 18px;
+            }
+
+            .alert {
+                margin-left: 0.5rem;
+                padding: 6px;
+                width: fit-content;
+                margin-left: auto;
+                font-size: 12px;
+            }
+        }
+    }
+}

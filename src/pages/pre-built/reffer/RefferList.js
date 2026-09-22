@@ -1,0 +1,1286 @@
+// import React, { useState, useEffect, useContext } from "react";
+// import Content from "../../../layout/content/Content";
+// import Head from "../../../layout/head/Head";
+// import {
+//   UncontrolledDropdown,
+//   DropdownMenu,
+//   DropdownToggle,
+//   ModalBody,
+//   Modal,
+//   DropdownItem,
+//   Form,
+//   Badge,
+// } from "reactstrap";
+// import {
+//   Button,
+//   Block,
+//   BlockBetween,
+//   BlockDes,
+//   BlockHead,
+//   BlockHeadContent,
+//   BlockTitle,
+//   Icon,
+//   TooltipComponent,
+//   Row,
+//   Col,
+//   OverlineTitle,
+//   DataTable,
+//   DataTableBody,
+//   DataTableHead,
+//   DataTableRow,
+//   DataTableItem,
+//   PaginationComponent,
+//   RSelect,
+// } from "../../../components/Component";
+
+// import { useForm } from "react-hook-form";
+// import axiosInstance from "../../../utils/AxiosInstance";
+// import { AuthContext } from "../../../context/AuthContext";
+// import { Link } from "react-router-dom";
+// import { PurchasedPlanHistoryStatusEnum } from "../../../utils/enum";
+// import {
+//   cryptoActivityOptions,
+//   filterCoin,
+//   filterPaymentmethod,
+//   filterStatusOptions,
+//   orderData,
+// } from "../investment/InvestData";
+
+// const RefferList = () => {
+//   const [onSearch, setonSearch] = useState(true);
+//   const [onSearchText, setSearchText] = useState("");
+//   const [modal, setModal] = useState({
+//     add: false,
+//   });
+//   // const [modalDetail, setModalDetail] = useState(false);
+//   const [data, setData] = useState(orderData);
+//   const [detail, setDetail] = useState({});
+//   const [formData, setFormData] = useState({
+//     orderType: "Deposit",
+//     amountBTC: "",
+//     amountUSD: "",
+//     balanceBTC: "",
+//     balanceUSD: "",
+//     status: "Pending",
+//   });
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [itemPerPage, setItemPerPage] = useState(10);
+//   const [sort, setSortState] = useState("");
+
+//   // Sorting data
+//   const sortFunc = (params) => {
+//     let defaultData = data;
+//     if (params === "asc") {
+//       let sortedData = defaultData.sort((a, b) => a.ref.localeCompare(b.ref));
+//       setData([...sortedData]);
+//     } else if (params === "dsc") {
+//       let sortedData = defaultData.sort((a, b) => b.ref.localeCompare(a.ref));
+//       setData([...sortedData]);
+//     }
+//   };
+
+//   // Changing state value when searching name
+//   useEffect(() => {
+//     if (onSearchText !== "") {
+//       const filteredObject = orderData.filter((item) => {
+//         return item.ref.toLowerCase().includes(onSearchText.toLowerCase());
+//       });
+//       setData([...filteredObject]);
+//     } else {
+//       setData([...orderData]);
+//     }
+//   }, [onSearchText]);
+
+//   // onChange function for searching name
+//   const onFilterChange = (e) => {
+//     setSearchText(e.target.value);
+//   };
+
+//   // function to reset the form
+//   const resetForm = () => {
+//     setFormData({
+//       orderType: "Buy",
+//       amountBTC: "",
+//       amountUSD: "",
+//       balanceBTC: "",
+//       balanceUSD: "",
+//       status: "Pending",
+//     });
+//   };
+
+//   // function to close the form modal
+//   const onFormCancel = () => {
+//     setModal({ add: false });
+//     resetForm();
+//   };
+
+//   // submit function to add a new item
+//   const onFormSubmit = (submitData) => {
+//     const { amountBTC, amountUSD, balanceUSD, balanceBTC } = submitData;
+//     let submittedData = {
+//       id: data.length + 1,
+//       ref: "YWLX52JG73",
+//       date: "18/10/2019 12:04 PM",
+//       desc: formData.orderType === "Profit" ? "Credited " + formData.orderType : formData.orderType + " Funds",
+//       orderType: formData.orderType,
+//       amountBTC: amountBTC,
+//       amountUSD: amountUSD,
+//       balanceBTC: balanceBTC,
+//       balanceUSD: balanceUSD,
+//       status: formData.status,
+//     };
+//     setData([submittedData, ...data]);
+//     resetForm();
+//     setModal({ add: false });
+//   };
+
+//   useEffect(() => {
+//     reset(formData);
+//   }, [formData]);
+
+//   // function to change to approve property for an item
+//   const onApproveClick = (id) => {
+//     let newData = data;
+//     let index = newData.findIndex((item) => item.id === id);
+//     newData[index].status = "Completed";
+//     setData([...newData]);
+//   };
+
+//   // function to change to reject property for an item
+//   const onRejectClick = (id) => {
+//     let newData = data;
+//     let index = newData.findIndex((item) => item.id === id);
+//     newData[index].status = "Rejected";
+//     setData([...newData]);
+//   };
+
+//   // function to load detail data
+//   // const loadDetail = (id) => {
+//   //   let index = data.findIndex((item) => item.id === id);
+//   //   setDetail(data[index]);
+//   // };
+
+//   // Get current list, pagination
+//   const indexOfLastItem = currentPage * itemPerPage;
+//   const indexOfFirstItem = indexOfLastItem - itemPerPage;
+//   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+//   // Change Page
+//   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+//   // function to toggle the search option
+//   const toggle = () => setonSearch(!onSearch);
+
+//   // function to toggle details modal
+//   // const toggleModalDetail = () => setModalDetail(!modalDetail);
+
+//   const {
+//     reset,
+//     register,
+//     handleSubmit,
+//     formState: { errors },
+//   } = useForm();
+
+//   // backend developer code
+//   // *****************************************
+//   // Enum Constants for Status, Acural, and Return Type
+//   const AcuralType = {
+//     0: "Every Hour",
+//     1: "Every Day",
+//     2: "Every Week",
+//     3: "Every Month",
+//     4: "Every Year",
+//   };
+
+//   const ReturnType = {
+//     0: "Lifetime",
+//     1: "Period",
+//   };
+
+// const ReferralLevelEnum = {
+//   0: "Level 1",
+//   1: "Level 2",
+//   2: "Level 3",
+// };
+
+//   // Define state to store plan purchase history
+//   const [planHistory, setPlanHistory] = useState([]);
+//   const { adminInfo } = useContext(AuthContext);
+//   const [loading, setLoading] = useState(true);
+//   const [modalDetail, setModalDetail] = useState(false);
+//   const [selectedPlan, setSelectedPlan] = useState(null);
+
+//   // Fetch plan purchase history
+//   useEffect(() => {
+//     const fetchPlanHistory = async () => {
+//       try {
+//         const response = await axiosInstance.get("/admin/referral/list-all", {
+//           headers: {
+//             Authorization: `Bearer ${adminInfo.token}`, // Assuming the token is in the adminInfo context
+//           },
+//         });
+//         // console.log(response.data.data.referralHistories);
+//         setPlanHistory(response.data.data.referralHistories); // Assuming response data is structured as shown
+//         setLoading(false);
+//       } catch (error) {
+//         console.error("Error fetching plan history:", error);
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchPlanHistory();
+//   }, [adminInfo.token]);
+
+//   const loadDetail = (plan) => {
+//     setSelectedPlan(plan); // Set the selected plan details
+//     toggleModalDetail(); // Open modal
+//   };
+
+//   const toggleModalDetail = () => {
+//     setModalDetail(!modalDetail); // Toggle modal visibility
+//   };
+
+//   if (loading) {
+//     return <p>Loading...</p>; // Handle loading state
+//   }
+
+//   // *****************************************
+
+//   return (
+//     <>
+//       <Head title="Reffer List"></Head>
+//       <Content>
+//         <BlockHead size="sm">
+//           <BlockBetween>
+//             <BlockHeadContent>
+//               <BlockTitle page>Reffer List</BlockTitle>
+//               <BlockDes className="text-soft">
+//                 <p>You have total 12,835 Lists.</p>
+//               </BlockDes>
+//             </BlockHeadContent>
+//           </BlockBetween>
+//         </BlockHead>
+
+//         <Block>
+//           <DataTable className="card-stretch listTable">
+//             <div className="card-inner">
+//               <div className="card-title-group">
+//                 <div className="card-title">
+//                   <h5 className="title">All Reffer List</h5>
+//                 </div>
+//                 <div className="card-tools me-n1">
+//                   <ul className="btn-toolbar gx-1">
+//                     <li>
+//                       <Button
+//                         href="#search"
+//                         onClick={(ev) => {
+//                           ev.preventDefault();
+//                           toggle();
+//                         }}
+//                         className="btn-icon search-toggle toggle-search"
+//                       >
+//                         <Icon name="search"></Icon>
+//                       </Button>
+//                     </li>
+//                     <li className="btn-toolbar-sep"></li>
+//                     <li>
+//                       <UncontrolledDropdown>
+//                         <DropdownToggle tag="a" className="btn btn-trigger btn-icon dropdown-toggle">
+//                           <div className="dot dot-primary"></div>
+//                           <Icon name="filter-alt"></Icon>
+//                         </DropdownToggle>
+//                         <DropdownMenu end className="filter-wg dropdown-menu-xl">
+//                           <div className="dropdown-head">
+//                             <span className="sub-title dropdown-title">Advanced Filter</span>
+//                             <div className="dropdown">
+//                               <Button size="sm" className="btn-icon">
+//                                 <Icon name="more-h"></Icon>
+//                               </Button>
+//                             </div>
+//                           </div>
+//                           <div className="dropdown-body dropdown-body-rg">
+//                             <Row className="gx-6 gy-4">
+//                               <Col size="6">
+//                                 <div className="form-group">
+//                                   <label className="overline-title overline-title-alt">Type</label>
+//                                   <RSelect options={cryptoActivityOptions} placeholder="Any Activity" />
+//                                 </div>
+//                               </Col>
+//                               <Col size="6">
+//                                 <div className="form-group">
+//                                   <label className="overline-title overline-title-alt">Status</label>
+//                                   <RSelect options={filterStatusOptions} placeholder="Any Status" />
+//                                 </div>
+//                               </Col>
+//                               <Col size="6">
+//                                 <div className="form-group">
+//                                   <label className="overline-title overline-title-alt">Pay Currency</label>
+//                                   <RSelect options={filterCoin} placeholder="Any coin" />
+//                                 </div>
+//                               </Col>
+//                               <Col size="6">
+//                                 <div className="form-group">
+//                                   <label className="overline-title overline-title-alt">Method</label>
+//                                   <RSelect options={filterPaymentmethod} placeholder="Any Method" />
+//                                 </div>
+//                               </Col>
+
+//                               <Col size="6">
+//                                 <div className="form-group">
+//                                   <div className="custom-control custom-control-sm custom-checkbox">
+//                                     <input type="checkbox" className="custom-control-input" id="includeDel" />
+//                                     <label className="custom-control-label" htmlFor="includeDel">
+//                                       {" "}
+//                                       Including Deleted
+//                                     </label>
+//                                   </div>
+//                                 </div>
+//                               </Col>
+
+//                               <Col size="12">
+//                                 <div className="form-group">
+//                                   <Button type="button" className="btn btn-secondary">
+//                                     Filter
+//                                   </Button>
+//                                 </div>
+//                               </Col>
+//                             </Row>
+//                           </div>
+//                           <div className="dropdown-foot between">
+//                             <a
+//                               href="#reset"
+//                               onClick={(ev) => {
+//                                 ev.preventDefault();
+//                               }}
+//                               className="clickable"
+//                             >
+//                               Reset Filter
+//                             </a>
+//                             <a
+//                               href="#save"
+//                               onClick={(ev) => {
+//                                 ev.preventDefault();
+//                               }}
+//                             >
+//                               Save Filter
+//                             </a>
+//                           </div>
+//                         </DropdownMenu>
+//                       </UncontrolledDropdown>
+//                     </li>
+//                     <li>
+//                       <UncontrolledDropdown>
+//                         <DropdownToggle tag="a" className="btn btn-trigger btn-icon dropdown-toggle">
+//                           <Icon name="setting"></Icon>
+//                         </DropdownToggle>
+//                         <DropdownMenu end className="dropdown-menu-xs">
+//                           <ul className="link-check">
+//                             <li>
+//                               <span>Show</span>
+//                             </li>
+//                             <li className={itemPerPage === 10 ? "active" : ""}>
+//                               <DropdownItem
+//                                 tag="a"
+//                                 href="#dropdownitem"
+//                                 onClick={(ev) => {
+//                                   ev.preventDefault();
+//                                   setItemPerPage(10);
+//                                 }}
+//                               >
+//                                 10
+//                               </DropdownItem>
+//                             </li>
+//                             <li className={itemPerPage === 15 ? "active" : ""}>
+//                               <DropdownItem
+//                                 tag="a"
+//                                 href="#dropdownitem"
+//                                 onClick={(ev) => {
+//                                   ev.preventDefault();
+//                                   setItemPerPage(15);
+//                                 }}
+//                               >
+//                                 15
+//                               </DropdownItem>
+//                             </li>
+//                           </ul>
+//                           <ul className="link-check">
+//                             <li>
+//                               <span>Order</span>
+//                             </li>
+//                             <li className={sort === "dsc" ? "active" : ""}>
+//                               <DropdownItem
+//                                 tag="a"
+//                                 href="#dropdownitem"
+//                                 onClick={(ev) => {
+//                                   ev.preventDefault();
+//                                   setSortState("dsc");
+//                                   sortFunc("dsc");
+//                                 }}
+//                               >
+//                                 DESC
+//                               </DropdownItem>
+//                             </li>
+//                             <li className={sort === "asc" ? "active" : ""}>
+//                               <DropdownItem
+//                                 tag="a"
+//                                 href="#dropdownitem"
+//                                 onClick={(ev) => {
+//                                   ev.preventDefault();
+//                                   setSortState("asc");
+//                                   sortFunc("asc");
+//                                 }}
+//                               >
+//                                 ASC
+//                               </DropdownItem>
+//                             </li>
+//                           </ul>
+//                         </DropdownMenu>
+//                       </UncontrolledDropdown>
+//                     </li>
+//                   </ul>
+//                 </div>
+//                 <div className={`card-search search-wrap ${!onSearch && "active"}`}>
+//                   <div className="search-content">
+//                     <Button
+//                       onClick={() => {
+//                         setSearchText("");
+//                         toggle();
+//                       }}
+//                       className="search-back btn-icon toggle-search"
+//                     >
+//                       <Icon name="arrow-left"></Icon>
+//                     </Button>
+//                     <input
+//                       type="text"
+//                       className="border-transparent form-focus-none form-control"
+//                       placeholder="Search by Order Id"
+//                       value={onSearchText}
+//                       onChange={(e) => onFilterChange(e)}
+//                     />
+//                     <Button className="search-submit btn-icon">
+//                       <Icon name="search"></Icon>
+//                     </Button>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//             {/* <DataTableBody bodyclass="nk-tb-tnx">
+//               <DataTableHead>
+//                 <DataTableRow>
+//                   <span>Details</span>
+//                 </DataTableRow>
+//                 <DataTableRow size="xxl">
+//                   <span>Source</span>
+//                 </DataTableRow>
+//                 <DataTableRow size="lg">
+//                   <span>Order</span>
+//                 </DataTableRow>
+//                 <DataTableRow className="text-end">
+//                   <span>Amount</span>
+//                 </DataTableRow>
+//                 <DataTableRow size="sm" className="text-end">
+//                   <span>Balance</span>
+//                 </DataTableRow>
+//                 <DataTableRow className="nk-tb-col-status">
+//                   <span className="sub-text d-none d-md-block">Status</span>
+//                 </DataTableRow>
+//                 <DataTableRow className="nk-tb-col-tools"></DataTableRow>
+//               </DataTableHead>
+
+//               {currentItems.length > 0
+//                 ? currentItems.map((item) => {
+//                     return (
+//                       <DataTableItem key={item.id}>
+//                         <DataTableRow>
+//                           <div className="nk-tnx-type">
+//                             <div
+//                               className={`nk-tnx-type-icon bg-${
+//                                 item.status === "Completed"
+//                                   ? "success-dim text-success"
+//                                   : item.status === "Upcoming"
+//                                   ? "warning-dim text-warning"
+//                                   : item.status === "Pending"
+//                                   ? "info-dim text-info"
+//                                   : "danger-dim text-danger"
+//                               }`}
+//                             >
+//                               <Icon name="arrow-up-right"></Icon>
+//                             </div>
+//                             <div className="nk-tnx-type-text">
+//                               <span className="tb-lead">{item.desc}</span>
+//                               <span className="tb-date">{item.date}</span>
+//                             </div>
+//                           </div>
+//                         </DataTableRow>
+//                         <DataTableRow size="xxl">
+//                           <span className="tb-lead-sub">Using PayPal Account</span>
+//                           <span className="tb-sub">mypay*****com</span>
+//                         </DataTableRow>
+//                         <DataTableRow size="lg">
+//                           <span className="tb-lead-sub">{item.ref}</span>
+//                           <Badge
+//                             className="badge-dot"
+//                             color={
+//                               item.status === "Completed"
+//                                 ? "success"
+//                                 : item.status === "Upcoming"
+//                                 ? "warning"
+//                                 : item.status === "Pending"
+//                                 ? "info"
+//                                 : "danger"
+//                             }
+//                           >
+//                             {item.orderType}
+//                           </Badge>
+//                         </DataTableRow>
+//                         <DataTableRow className="text-end">
+//                           <span className="tb-amount">
+//                             + {item.amountBTC} <span>BTC</span>
+//                           </span>
+//                           <span className="tb-amount-sm">{item.amountUSD} USD</span>
+//                         </DataTableRow>
+//                         <DataTableRow className="text-end" size="sm">
+//                           <span className="tb-amount">
+//                             {item.balanceBTC} <span>BTC</span>
+//                           </span>
+//                           <span className="tb-amount-sm">{item.balanceUSD} USD</span>
+//                         </DataTableRow>
+//                         <DataTableRow className="nk-tb-col-status">
+//                           <div
+//                             className={`dot dot-${
+//                               item.status === "Completed"
+//                                 ? "success"
+//                                 : item.status === "Upcoming"
+//                                 ? "warning"
+//                                 : item.status === "Pending"
+//                                 ? "info"
+//                                 : "danger"
+//                             } d-md-none`}
+//                           ></div>
+//                           <Badge
+//                             className="badge-sm badge-dim d-none d-md-inline-flex"
+//                             color={`outline-${
+//                               item.status === "Completed"
+//                                 ? "success"
+//                                 : item.status === "Upcoming"
+//                                 ? "warning"
+//                                 : item.status === "Pending"
+//                                 ? "info"
+//                                 : "danger"
+//                             }`}
+//                           >
+//                             {item.status}
+//                           </Badge>
+//                         </DataTableRow>
+//                         <DataTableRow className="nk-tb-col-tools">
+//                           <ul className="nk-tb-actions gx-1">
+//                             <li
+//                               className="nk-tb-action-hidden"
+//                               onClick={() => {
+//                                 loadDetail(item.id);
+//                                 toggleModalDetail();
+//                               }}
+//                             >
+//                               <TooltipComponent
+//                                 tag="a"
+//                                 containerClassName="bg-white btn btn-sm btn-outline-light btn-icon btn-tooltip"
+//                                 id={item.ref + "details"}
+//                                 icon="eye"
+//                                 direction="top"
+//                                 text="Details"
+//                               />
+//                             </li>
+//                             {item.status !== "Completed" && item.status !== "Rejected" && (
+//                               <React.Fragment>
+//                                 <li className="nk-tb-action-hidden" onClick={() => onApproveClick(item.id)}>
+//                                   <TooltipComponent
+//                                     tag="a"
+//                                     containerClassName="bg-white btn btn-sm btn-outline-light btn-icon btn-tooltip"
+//                                     id={item.ref + "approve"}
+//                                     icon="done"
+//                                     direction="top"
+//                                     text="approve"
+//                                   />
+//                                 </li>
+//                                 <li className="nk-tb-action-hidden" onClick={() => onRejectClick(item.id)}>
+//                                   <TooltipComponent
+//                                     tag="a"
+//                                     containerClassName="bg-white btn btn-sm btn-outline-light btn-icon btn-tooltip"
+//                                     id={item.ref + "reject"}
+//                                     icon="cross-round"
+//                                     direction="top"
+//                                     text="Reject"
+//                                   />
+//                                 </li>
+//                               </React.Fragment>
+//                             )}
+//                             <li>
+//                               <UncontrolledDropdown>
+//                                 <DropdownToggle
+//                                   tag="a"
+//                                   className="dropdown-toggle bg-white btn btn-sm btn-outline-light btn-icon"
+//                                 >
+//                                   <Icon name="more-h"></Icon>
+//                                 </DropdownToggle>
+//                                 <DropdownMenu end>
+//                                   <ul className="link-list-opt no-bdr">
+//                                     {item.status !== "Completed" && item.status !== "Rejected" && (
+//                                       <React.Fragment>
+//                                         <li onClick={() => onApproveClick(item.id)}>
+//                                           <DropdownItem
+//                                             tag="a"
+//                                             href="#approve"
+//                                             onClick={(ev) => {
+//                                               ev.preventDefault();
+//                                             }}
+//                                           >
+//                                             <Icon name="done"></Icon>
+//                                             <span>Approve</span>
+//                                           </DropdownItem>
+//                                         </li>
+//                                         <li onClick={() => onRejectClick(item.id)}>
+//                                           <DropdownItem
+//                                             tag="a"
+//                                             href="#reject"
+//                                             onClick={(ev) => {
+//                                               ev.preventDefault();
+//                                             }}
+//                                           >
+//                                             <Icon name="cross-round"></Icon>
+//                                             <span>Reject</span>
+//                                           </DropdownItem>
+//                                         </li>
+//                                       </React.Fragment>
+//                                     )}
+//                                     <li
+//                                       onClick={() => {
+//                                         loadDetail(item.id);
+//                                         toggleModalDetail();
+//                                       }}
+//                                     >
+//                                       <DropdownItem
+//                                         tag="a"
+//                                         href="#details"
+//                                         onClick={(ev) => {
+//                                           ev.preventDefault();
+//                                         }}
+//                                       >
+//                                         <Icon name="eye"></Icon>
+//                                         <span>Details</span>
+//                                       </DropdownItem>
+//                                     </li>
+//                                   </ul>
+//                                 </DropdownMenu>
+//                               </UncontrolledDropdown>
+//                             </li>
+//                           </ul>
+//                         </DataTableRow>
+//                       </DataTableItem>
+//                     );
+//                   })
+//                 : null}
+//             </DataTableBody> */}
+//             {/* <div className="card-inner">
+//               {currentItems.length > 0 ? (
+//                 <PaginationComponent
+//                   noDown
+//                   itemPerPage={itemPerPage}
+//                   totalItems={data.length}
+//                   paginate={paginate}
+//                   currentPage={currentPage}
+//                 />
+//               ) : (
+//                 <div className="text-center">
+//                   <span className="text-silent">No data found</span>
+//                 </div>
+//               )}
+//             </div> */}
+
+//             <DataTableBody bodyclass="nk-tb-tnx">
+//               {/* DataTableHead with updated fields */}
+//               <DataTableHead>
+//                 <DataTableRow>
+//                   <span className="sub-text">Referring User</span>
+//                 </DataTableRow>
+//                 <DataTableRow>
+//                   <span className="sub-text">Referred User</span>
+//                 </DataTableRow>
+//                 <DataTableRow className="text-end text-nowrap">
+//                   <span className="sub-text">Referral Amount</span>
+//                 </DataTableRow>
+//                 <DataTableRow>
+//                   <span className="sub-text">Level</span>
+//                 </DataTableRow>
+//                 <DataTableRow>
+//                   <span className="sub-text">Referral Date</span>
+//                 </DataTableRow>
+//                 <DataTableRow>
+//                   <span className="sub-text">Actions</span>
+//                 </DataTableRow>
+//               </DataTableHead>
+
+//               {/* Map through referral history */}
+//               {planHistory.length > 0 ? (
+//                 planHistory.map((item) => (
+//                   <DataTableItem key={item._id}>
+//                     <DataTableRow>
+//                       <Link to={`${process.env.PUBLIC_URL}/user-profile/${item.userId._id}`}>
+//                         <div className="user-card">
+//                           <div className="user-info">
+//                             <span className="tb-lead">{`${item.userId.firstName} ${item.userId.lastName}`}</span>
+//                             <span>{item.userId.email}</span>
+//                           </div>
+//                         </div>
+//                       </Link>
+//                     </DataTableRow>
+
+//                     <DataTableRow>
+//                       <Link to={`${process.env.PUBLIC_URL}/user-profile/${item.referralUserId._id}`}>
+//                         <div className="user-card">
+//                           <div className="user-info">
+//                             <span className="tb-lead">{`${item.referralUserId.firstName} ${item.referralUserId.lastName}`}</span>
+//                             <span>{item.referralUserId.email}</span>
+//                           </div>
+//                         </div>
+//                       </Link>
+//                     </DataTableRow>
+
+//                     <DataTableRow className="text-end">
+//                       <span className="tb-amount">{item.referralAmount} USD</span>
+//                     </DataTableRow>
+
+//                     <DataTableRow>
+//                       <span>{ReferralLevelEnum[item.level]}</span> {/* Display referral level */}
+//                     </DataTableRow>
+
+//                     <DataTableRow>
+//                       <span>{new Date(item.date).toLocaleString()}</span> {/* Format the referral date */}
+//                     </DataTableRow>
+
+//                     {/* Action buttons with details icon */}
+//                     <DataTableRow>
+//                       <ul>
+//                         <li
+//                           onClick={() => {
+//                             loadDetail(item);
+//                           }}
+//                         >
+//                           <TooltipComponent
+//                             tag="a"
+//                             containerClassName="bg-white btn btn-sm btn-outline-light btn-icon btn-tooltip"
+//                             id={`id-${item._id}-details`} // Prefix the ID with 'id-' to make it a valid CSS selector
+//                             icon="eye"
+//                             direction="top"
+//                             text="Details"
+//                           />
+//                         </li>
+//                       </ul>
+//                     </DataTableRow>
+//                   </DataTableItem>
+//                 ))
+//               ) : (
+//                 <p>No referral history found</p>
+//               )}
+//             </DataTableBody>
+
+//             {/* Pagination */}
+//             <div className="card-inner">
+//               {currentItems.length > 0 ? (
+//                 <PaginationComponent
+//                   noDown
+//                   itemPerPage={itemPerPage}
+//                   totalItems={data.length}
+//                   paginate={paginate}
+//                   currentPage={currentPage}
+//                 />
+//               ) : (
+//                 <div className="text-center">
+//                   <span className="text-silent">No data found</span>
+//                 </div>
+//               )}
+//             </div>
+//           </DataTable>
+//         </Block>
+
+//         {/* <Modal isOpen={modal.add} toggle={() => setModal({ add: false })} className="modal-dialog-centered" size="lg">
+//           <ModalBody>
+//             <a
+//               href="#close"
+//               onClick={(ev) => {
+//                 ev.preventDefault();
+//                 onFormCancel();
+//               }}
+//               className="close"
+//             >
+//               <Icon name="cross-sm"></Icon>
+//             </a>
+//             <div className="p-2">
+//               <h5 className="title">Add Transaction</h5>
+//               <Form className="mt-4" onSubmit={handleSubmit(onFormSubmit)} noValidate>
+//                 <Row className="g-gs">
+//                   <Col md="6">
+//                     <div className="form-group">
+//                       <label className="form-label">Order Type</label>
+//                       <div className="form-control-wrap">
+//                         <RSelect
+//                           options={cryptoActivityOptions}
+//                           value={{
+//                             value: formData.orderType,
+//                             label: formData.orderType,
+//                           }}
+//                           onChange={(e) => setFormData({ ...formData, orderType: e.value })}
+//                         />
+//                       </div>
+//                     </div>
+//                   </Col>
+//                   <Col md="6">
+//                     <div className="form-group">
+//                       <label className="form-label">Status</label>
+//                       <div className="form-control-wrap">
+//                         <RSelect
+//                           options={filterStatusOptions}
+//                           value={{
+//                             value: formData.status,
+//                             label: formData.status,
+//                           }}
+//                           onChange={(e) => setFormData({ ...formData, status: e.value })}
+//                         />
+//                       </div>
+//                     </div>
+//                   </Col>
+//                 </Row>
+//                 <OverlineTitle className="pt-4"> Amount </OverlineTitle>
+//                 <hr className="hr mt-2 border-light" />
+//                 <Row className="g-gs">
+//                   <Col md="6">
+//                     <div className="form-group">
+//                       <label className="form-label">BTC</label>
+//                       <input
+//                         type="number"
+//                         {...register("amountBTC", { required: "This field is required" })}
+//                         value={formData.amountBTC}
+//                         onChange={(e) => setFormData({ ...formData, amountBTC: e.target.value })}
+//                         className="form-control"
+//                       />
+//                       {errors.amountBTC && <span className="invalid">{errors.amountBTC.message}</span>}
+//                     </div>
+//                   </Col>
+//                   <Col md="6">
+//                     <div className="form-group">
+//                       <label className="form-label">USD</label>
+//                       <input
+//                         type="number"
+//                         {...register("amountUSD", { required: "This field is required" })}
+//                         value={formData.amountUSD}
+//                         onChange={(e) => setFormData({ ...formData, amountUSD: e.target.value })}
+//                         className="form-control"
+//                       />
+//                       {errors.amountUSD && <span className="invalid">{errors.amountUSD.message}</span>}
+//                     </div>
+//                   </Col>
+//                 </Row>
+//                 <OverlineTitle className="pt-4"> Balance </OverlineTitle>
+//                 <hr className="hr mt-2 border-light" />
+//                 <Row className="gy-4">
+//                   <Col md="6">
+//                     <div className="form-group">
+//                       <label className="form-label">BTC</label>
+//                       <input
+//                         type="number"
+//                         {...register("balanceBTC", { required: "This field is required" })}
+//                         value={formData.balanceBTC}
+//                         onChange={(e) => setFormData({ ...formData, balanceBTC: e.target.value })}
+//                         className="form-control"
+//                       />
+//                       {errors.balanceBTC && <span className="invalid">{errors.balanceBTC.message}</span>}
+//                     </div>
+//                   </Col>
+//                   <Col md="6">
+//                     <div className="form-group">
+//                       <label className="form-label">USD</label>
+//                       <input
+//                         type="number"
+//                         {...register("balanceUSD", { required: "This field is required" })}
+//                         value={formData.balanceUSD}
+//                         onChange={(e) => setFormData({ ...formData, balanceUSD: e.target.value })}
+//                         className="form-control"
+//                       />
+//                       {errors.balanceUSD && <span className="invalid">{errors.balanceUSD.message}</span>}
+//                     </div>
+//                   </Col>
+//                   <Col size="12">
+//                     <ul className="align-center flex-wrap flex-sm-nowrap gx-4 gy-2">
+//                       <li>
+//                         <Button type="submit" color="primary" size="md">
+//                           Add Transaction
+//                         </Button>
+//                       </li>
+//                       <li>
+//                         <a
+//                           href="#cancel"
+//                           onClick={(ev) => {
+//                             ev.preventDefault();
+//                             onFormCancel();
+//                           }}
+//                           className="link link-light"
+//                         >
+//                           Cancel
+//                         </a>
+//                       </li>
+//                     </ul>
+//                   </Col>
+//                 </Row>
+//               </Form>
+//             </div>
+//           </ModalBody>
+//         </Modal> */}
+
+//         {/* <Modal isOpen={modalDetail} toggle={() => toggleModalDetail()} className="modal-dialog-centered" size="lg">
+//           <ModalBody>
+//             <a
+//               href="#cancel"
+//               onClick={(ev) => {
+//                 ev.preventDefault();
+//                 toggleModalDetail();
+//               }}
+//               className="close"
+//             >
+//               <Icon name="cross-sm"></Icon>
+//             </a>
+//             <div className="nk-modal-head mb-3">
+//               <h4 className="nk-modal-title title">
+//                 Transaction <small className="text-primary">{detail.transactionId}</small>
+//               </h4>
+//             </div>
+//             <div className="nk-tnx-details">
+//               <BlockBetween className="flex-wrap g-3">
+//                 <div className="nk-tnx-type">
+//                   <div
+//                     className={`nk-tnx-type-icon bg-${
+//                       detail.status === "Completed"
+//                         ? "success"
+//                         : detail.status === "Upcoming"
+//                         ? "warning"
+//                         : detail.status === "Pending"
+//                         ? "info"
+//                         : "danger"
+//                     } text-white`}
+//                   >
+//                     <Icon name="arrow-up-right"></Icon>
+//                   </div>
+//                   <div className="nk-tnx-type-text">
+//                     <h5 className="title">+ {detail.amountBTC} BTC</h5>
+//                     <span className="sub-text mt-n1">{detail.date}</span>
+//                   </div>
+//                 </div>
+//                 <ul className="align-center flex-wrap gx-3">
+//                   <li>
+//                     <Badge
+//                       color={
+//                         detail.status === "Completed"
+//                           ? "success"
+//                           : detail.status === "Upcoming"
+//                           ? "warning"
+//                           : detail.status === "Pending"
+//                           ? "info"
+//                           : "danger"
+//                       }
+//                       size="sm"
+//                     >
+//                       {detail.status}
+//                     </Badge>
+//                   </li>
+//                 </ul>
+//               </BlockBetween>
+//               <div className="nk-modal-head mt-4 mb-3">
+//                 <h5 className="title">Transaction Info</h5>
+//               </div>
+//               <Row className="gy-3">
+//                 <Col lg={6}>
+//                   <span className="sub-text">Order ID</span>
+//                   <span className="caption-text">{detail.ref}</span>
+//                 </Col>
+//                 <Col lg={6}>
+//                   <span className="sub-text">Reference ID</span>
+//                   <span className="caption-text text-break">{detail.referenceId}</span>
+//                 </Col>
+//                 <Col lg={6}>
+//                   <span className="sub-text">Transaction Fee</span>
+//                   <span className="caption-text">{detail.transactionFee} BTC</span>
+//                 </Col>
+//                 <Col lg={6}>
+//                   <span className="sub-text">Amount</span>
+//                   <span className="caption-text">{detail.amountBTC} BTC</span>
+//                 </Col>
+//               </Row>
+//               <div className="nk-modal-head mt-4 mb-3">
+//                 <h5 className="title">Transaction Details</h5>
+//               </div>
+//               <Row className="gy-3">
+//                 <Col lg={6}>
+//                   <span className="sub-text">Transaction Type</span>
+//                   <span className="caption-text">{detail.orderType}</span>
+//                 </Col>
+//                 <Col lg={6}>
+//                   <span className="sub-text">Payment Gateway</span>
+//                   <span className="caption-text align-center">
+//                     CoinPayments{" "}
+//                     <Badge color="primary" className="ms-2 text-white">
+//                       Online Gateway
+//                     </Badge>
+//                   </span>
+//                 </Col>
+//                 <Col lg={6}>
+//                   <span className="sub-text">Payment From</span>
+//                   <span className="caption-text text-break">{detail.paymentForm}</span>
+//                 </Col>
+//                 <Col lg={6}>
+//                   <span className="sub-text">Payment To</span>
+//                   <span className="caption-text text-break">{detail.paymentTo}</span>
+//                 </Col>
+//                 <Col lg={12}>
+//                   <span className="sub-text">Transaction Hash</span>
+//                   <span className="caption-text text-break">{detail.transactionHash}</span>
+//                 </Col>
+//                 <Col lg={12}>
+//                   <span className="sub-text">Details</span>
+//                   <span className="caption-text">{detail.orderType} funds</span>
+//                 </Col>
+//               </Row>
+//             </div>
+//           </ModalBody>
+//         </Modal> */}
+
+//         {/* Modal to display referral details */}
+//         {selectedPlan && (
+//           <Modal isOpen={modalDetail} toggle={toggleModalDetail} className="modal-dialog-centered" size="lg">
+//             <ModalBody>
+//               <a
+//                 href="#cancel"
+//                 onClick={(ev) => {
+//                   ev.preventDefault();
+//                   toggleModalDetail();
+//                 }}
+//                 className="close"
+//               >
+//                 <Icon name="cross-sm"></Icon>
+//               </a>
+//               <div className="nk-modal-head mb-4">
+//                 <h4 className="nk-modal-title title">
+//                   Referral by{" "}
+//                   <small className="text-primary">{`${selectedPlan.userId.firstName} ${selectedPlan.userId.lastName}`}</small>
+//                 </h4>
+//               </div>
+//               <div className="nk-tnx-details">
+//                 <BlockBetween className="flex-wrap g-3">
+//                   <div className="nk-tnx-type">
+//                     <div className={`nk-tnx-type-icon bg-info text-white`}>
+//                       <Icon name="arrow-up-right"></Icon>
+//                     </div>
+//                     <div className="nk-tnx-type-text">
+//                       <h5 className="title">{selectedPlan.referralAmount} USD</h5>
+//                       <span className="sub-text mt-n1">{new Date(selectedPlan.date).toLocaleString()}</span>
+//                     </div>
+//                   </div>
+//                 </BlockBetween>
+//                 <div className="nk-modal-head mt-4 mb-3">
+//                   <h5 className="title">Referral Info</h5>
+//                 </div>
+//                 <Row className="gy-3">
+//                   <Col lg={6}>
+//                     <span className="sub-text">Referred User</span>
+//                     <span className="caption-text">{`${selectedPlan.referralUserId.firstName} ${selectedPlan.referralUserId.lastName}`}</span>
+//                   </Col>
+//                   <Col lg={6}>
+//                     <span className="sub-text">Referred User Email</span>
+//                     <span className="caption-text">{selectedPlan.referralUserId.email}</span>
+//                   </Col>
+//                   <Col lg={6}>
+//                     <span className="sub-text">Referral Level</span>
+//                     <span className="caption-text">{` ${ReferralLevelEnum[selectedPlan.level]}`}</span>
+//                   </Col>
+//                   <Col lg={6}>
+//                     <span className="sub-text">Referral Date</span>
+//                     <span className="caption-text">{new Date(selectedPlan.date).toLocaleString()}</span>
+//                   </Col>
+//                 </Row>
+//               </div>
+//             </ModalBody>
+//           </Modal>
+//         )}
+//       </Content>
+//     </>
+//   );
+// };
+
+// export default RefferList;
+
+import React, { useContext, useEffect, useState } from 'react'
+import Head from '../../../layout/head/Head'
+import Content from '../../../layout/content/Content'
+import { Block, BlockBetween, BlockContent, BlockDes, BlockHead, BlockHeadContent, BlockTitle, Icon, InputSwitch, RSelect } from '../../../components/Component'
+import { Button, Card, CardBody, Col, Row } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../context/AuthContext';
+import axiosInstance from '../../../utils/AxiosInstance';
+import useShowToast from '../../hooks/useShowToast';
+
+const investment = [
+  { value: '1', label: 'Investment 1' },
+  { value: '2', label: 'Investment 2' },
+  { value: '3', label: 'Investment 3' },
+];
+
+function RefferList() {
+  const { adminInfo } = useContext(AuthContext);
+  const [editState, setEditState] = useState([false, false, false]);
+  const [levels, setLevels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  // const [success, setSuccess] = useState("");
+   const showToast = useShowToast();
+
+  const fetchReferralBonus = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get("/admin/referral/bonus-list", {
+        headers: {
+          Authorization: `Bearer ${adminInfo.token}`,
+        },
+      });
+      setLevels(response.data.data.levels);
+    } catch (err) {
+      setError("Failed to fetch referral bonus data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReferralBonus();
+  }, [adminInfo.token]);
+
+  const handleEditClick = (index) => {
+    const newEditState = [...editState];
+    newEditState[index] = true;
+    setEditState(newEditState);
+  };
+
+  const handleLevelChange = (index, value) => {
+    const updatedLevels = levels.map((level, i) => (i === index ? { ...level, percentage: value } : level));
+    console.log(updatedLevels);
+    setLevels(updatedLevels);
+  };
+
+  const saveChanges = async () => {
+    setSaving(true);
+    setError("");
+    // setSuccess("");
+    const payload = {
+      levels: levels.map((level) => ({
+        levelName: level.levelName,
+        percentage: parseFloat(level.percentage),
+      })),
+    };
+
+    try {
+      await axiosInstance.put("/admin/referral/update/referral-bonus", payload, {
+        headers: {
+          Authorization: `Bearer ${adminInfo.token}`,
+        },
+      });
+      // setSuccess("Referral bonus updated successfully!");
+       showToast("Done", "Referral bonus updated successfully!", "success");
+      
+    } catch (err) {
+      // setError("Failed to update referral bonus. Please try again.");
+      showToast("Error", "Failed to update referral bonus. Please try again.", "warning");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <>
+      <Head title="Referral Setting" />
+      <Content>
+        <BlockHead size="sm">
+          <BlockBetween className="g-3">
+            <BlockContent>
+              <BlockTitle>Referral Setting</BlockTitle>
+              <BlockDes className="text-soft">
+                <p>Edit Referral Details.</p>
+              </BlockDes>
+            </BlockContent>
+          </BlockBetween>
+        </BlockHead>
+        <Block>
+          {/* <Row className="g-gs">
+            <Col md={5} xxl={5}> */}
+              <Card className="card-bordered">
+                <CardBody className="card-inner gy-3">
+                  <h5 className="title">Investment Bonus</h5>
+
+              <div className='flexCrad1'>
+                {levels.map((level, index) => (
+                  <table className="table table-bordered mt-3" key={level._id}>
+                    <thead>
+                      <tr>
+                        <th scope="col" className="bg-light">
+                          Level
+                        </th>
+                        <th scope="col" className="bg-light">
+                          Bonus
+                        </th>
+                        <th scope="col" className="bg-light">
+                          Edit
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row" className="bg-light">
+                          Level #{index + 1}
+                        </th>
+                        <td className="bg-light">
+                          <input
+                            className="form-control"
+                            value={level.percentage || ""}
+                            disabled={!editState[index]}
+                            onChange={(e) => handleLevelChange(index, e.target.value)}
+                          />
+                        </td>
+                        <td className="bg-light">
+                          <Button color="primary" onClick={() => handleEditClick(index)}>
+                            <Icon name="edit" />
+                          </Button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                ))}
+              </div>
+
+                  <Button className="refferBtn" color="primary" onClick={saveChanges}>
+                    <Icon className="btnIcon" name="save" />
+                    Save
+                  </Button>
+
+                  {saving && <p>Saving changes...</p>}
+                  {/* {error && <p style={{ color: "red" }}>{error}</p>}
+                  {success && <p style={{ color: "green" }}>{success}</p>} */}
+                </CardBody>
+              </Card>
+            {/* </Col>
+          </Row> */}
+        </Block>
+      </Content>
+    </>
+  );
+}
+
+export default RefferList;
