@@ -330,7 +330,7 @@ const F10Investment = () => {
                   onClick={() => setMarketValueModal(true)}
                 >
                   <Icon name="setting-alt" className="me-1"></Icon>
-                  <span>F10 Rate & Base Price</span>
+                  <span>F10 Rate</span>
                 </Button>
               </div>
             </BlockHeadContent>
@@ -578,12 +578,12 @@ const F10Investment = () => {
               <Icon name="cross-sm"></Icon>
             </a>
             <div className="p-2">
-              <h5 className="title">F10 Rate & Fixed Base Price</h5>
-              <p className="text-soft fs-12px mb-3">
+              <h5 className="title">F10 Investment</h5>
+              {/* <p className="text-soft fs-12px mb-3">
                 Configure the base purchase price per token and the daily yield rate.
-              </p>
+              </p> */}
               <form onSubmit={handleSaveMarketValue}>
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label className="form-label" htmlFor="f10FixedValue">
                     Fixed Base Price (USD)
                   </label>
@@ -603,7 +603,7 @@ const F10Investment = () => {
                       required
                     />
                   </div>
-                </div>
+                </div> */}
 
                 <div className="form-group mt-3">
                   <label className="form-label" htmlFor="f10Rate">
